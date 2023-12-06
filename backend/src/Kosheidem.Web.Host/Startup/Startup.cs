@@ -20,6 +20,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
 using System.IO;
+using Kosheidem.Weeks;
 
 namespace Kosheidem.Web.Host.Startup
 {
@@ -74,6 +75,8 @@ namespace Kosheidem.Web.Host.Startup
                 )
             );
 
+            services.AddSingleton<WeeksBackgroundWorker>();
+
             // Swagger - Enable this line and the related lines in Configure method to enable swagger UI
             ConfigureSwagger(services);
 
@@ -103,7 +106,10 @@ namespace Kosheidem.Web.Host.Startup
             app.UseAuthorization();
 
             app.UseAbpRequestLocalization();
-            
+
+            var weeksBackgroundWorker = app.ApplicationServices.GetRequiredService<WeeksBackgroundWorker>();
+            weeksBackgroundWorker.Start();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<AbpCommonHub>("/signalr");
