@@ -31,9 +31,8 @@ namespace Kosheidem
 
         public override void PostInitialize()
         {
-            // var workManager = IocManager.Resolve<IBackgroundWorkerManager>();
-            //
-            // workManager.Add(IocManager.Resolve<WeeksBackgroundWorker>());
+            var workManager = IocManager.Resolve<IBackgroundWorkerManager>();
+            workManager.Add(IocManager.Resolve<WeeksBackgroundWorker>());
         }
     }
 }

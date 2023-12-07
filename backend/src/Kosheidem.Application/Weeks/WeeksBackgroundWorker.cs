@@ -14,7 +14,7 @@ public class WeeksBackgroundWorker : PeriodicBackgroundWorkerBase, ISingletonDep
     public WeeksBackgroundWorker(AbpTimer timer, IRepository<Week, Guid> weeksRepository) : base(timer)
     {
         _weeksRepository = weeksRepository;
-        // every 1 hour
+        Timer.RunOnStart = true;
         Timer.Period = 60 * 60 * 1000;
     }
 
