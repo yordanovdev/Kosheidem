@@ -6,5 +6,5 @@ namespace Kosheidem.Weeks;
 
 public interface IWeeksService : IDomainService
 {
-    Task<ICollection<WeekDto>> GetAllWeeks();
+    Task<ICollection<Week>> GetAllWeeks();
 }

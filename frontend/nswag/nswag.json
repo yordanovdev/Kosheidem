@@ -10,7 +10,7 @@
   },
   "codeGenerators": {
     "openApiToTypeScriptClient": {
-      "className": "{controller}Client",
+      "className": "{controller}Kosheidem",
       "moduleName": "",
       "namespace": "",
       "typeScriptVersion": 2.7,
@@ -39,8 +39,8 @@
       "useTransformOptionsMethod": false,
       "useTransformResultMethod": false,
       "generateDtoTypes": true,
-      "operationGenerationMode": "MultipleClientsFromOperationId",
-      "markOptionalProperties": true,
+      "operationGenerationMode": "MultipleClientsFromPathSegments",
+      "markOptionalProperties": false,
       "generateCloneMethod": false,
       "typeStyle": "Interface",
       "enumStyle": "Enum",
@@ -68,7 +68,7 @@
       "enumNameGeneratorType": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "client.ts",
+      "output": "../src/services/client.ts",
       "newLineBehavior": "Auto"
     }
   }

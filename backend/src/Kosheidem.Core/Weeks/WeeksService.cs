@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Abp.Domain.Services;
 using Microsoft.EntityFrameworkCore;
+
 namespace Kosheidem.Weeks;
 
 public class WeeksService : DomainService, IWeeksService
@@ -15,9 +16,10 @@ public class WeeksService : DomainService, IWeeksService
         _weeksRepository = weeksRepository;
     }
 
-    public async Task<ICollection<WeekDto>> GetAllWeeks()
+    public async Task<ICollection<Week>> GetAllWeeks()
     {
         var weeks = await _weeksRepository.GetAllIncluding().ToListAsync();
-        return ObjectMapper.Map<ICollection<WeekDto>>(weeks);
+        return weeks;
     }
+
 }

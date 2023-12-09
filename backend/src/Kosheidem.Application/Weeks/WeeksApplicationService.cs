@@ -13,8 +13,9 @@ public class WeeksApplicationService : ApplicationService, IWeeksApplicationServ
         _weeksService = weeksService;
     }
 
-    public async Task<ICollection<WeekDto>> GetAll()
+    public async Task<ICollection<WeekOverviewDto>> GetAll()
     {
-        return await _weeksService.GetAllWeeks();
+        var weeks = await _weeksService.GetAllWeeks();
+        return ObjectMapper.Map<ICollection<WeekOverviewDto>>(weeks);
     }
 }
