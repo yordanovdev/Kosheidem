@@ -75,8 +75,6 @@ namespace Kosheidem.Web.Host.Startup
                 )
             );
 
-            services.AddSingleton<WeeksBackgroundWorker>();
-
             // Swagger - Enable this line and the related lines in Configure method to enable swagger UI
             ConfigureSwagger(services);
 
