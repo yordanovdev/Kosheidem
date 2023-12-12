@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { mealsService } from "../../services";
 import { WeekContent } from "./WeekContent";
+import { ProgressSpinner } from "primereact/progressspinner";
 
 interface IWeek {
   week: WeekOverviewDto;
@@ -17,7 +18,7 @@ export const Week: React.FC<IWeek> = (props) => {
   const { week, isOpened, handleBtnClicked, index } = props;
   const [activeIdx, setActiveIdx] = useState(0);
 
-  const { data: mealsResponse } = useQuery({
+  const { data: mealsResponse, isLoading } = useQuery({
     queryKey: ["week", week.id],
     queryFn: () => mealsService.getMealsByType(week.id),
     enabled: week && isOpened,
@@ -67,13 +68,18 @@ export const Week: React.FC<IWeek> = (props) => {
           isOpened ? "block opacity-100" : "hidden opacity-0"
         } `}
       >
+        {isLoading && (
+          <div className="flex items-center">
+            <ProgressSpinner />
+          </div>
+        )}
         {types && (
           <WeekContent
             activeIdx={activeIdx}
             setActiveIdx={setActiveIdx}
             types={types}
             weekId={week.id}
-            disableVoting={week.past ? true : false}
+            disableVoting={week.past}
           />
         )}
       </div>

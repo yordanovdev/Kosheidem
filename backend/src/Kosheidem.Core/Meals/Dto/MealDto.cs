@@ -8,4 +8,5 @@ public class MealDto : EntityDto<Guid>
     public string Name { get; set; }
     public string Type { get; set; }
     public int NumberOfVotes { get; set; }
+    public bool VotedLastWeek { get; set; }
 }

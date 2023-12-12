@@ -2353,6 +2353,7 @@ export interface MealDto {
     name: string | undefined;
     type: string | undefined;
     numberOfVotes: number;
+    votedLastWeek: boolean;
 }
 
 export interface MealDtoPagedResultDto {

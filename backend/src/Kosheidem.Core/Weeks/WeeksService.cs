@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
 using Abp.Domain.Services;
+using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 
 namespace Kosheidem.Weeks;
@@ -22,4 +24,15 @@ public class WeeksService : DomainService, IWeeksService
         return weeks;
     }
 
+    public async Task<Week> GetLastWeekById(Guid weekId)
+    {
+        var week = await _weeksRepository.GetAllIncluding().FirstOrDefaultAsync(i => i.Id == weekId);
+
+        if (week == null) throw new UserFriendlyException("Week with that id was not found");
+
+        var lastWeek = await _weeksRepository.GetAllIncluding().Where(i => i.StartDate < week.StartDate)
+            .OrderByDescending(i => i.StartDate).FirstOrDefaultAsync();
+
+        return lastWeek;
+    }
 }

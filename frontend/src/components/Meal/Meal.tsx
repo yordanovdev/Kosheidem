@@ -26,9 +26,7 @@ export const Meal: React.FC<IMealProps> = (props) => {
       ? (JSON.parse(userVotesFromStorage) as StorageMeal[])
       : [];
 
-    return userVotes.find((i) => i.mealId === meal.id && i.weekId === weekId)
-      ? true
-      : false;
+    return userVotes.find((i) => i.mealId === meal.id && i.weekId === weekId);
   }, [weekId, meal]);
 
   const onVoteBtnClicked = async () => {
@@ -80,7 +78,12 @@ export const Meal: React.FC<IMealProps> = (props) => {
   return (
     <div className="p-5 shadow-lg w-min flex gap-2 flex-col min-w-[250px]">
       <h5 className="text-xl whitespace-nowrap">{meal.name}</h5>
-      <p className="italic">Votes: {meal.numberOfVotes}</p>
+      <p className="italic whitespace-nowrap">
+        Votes: {meal.numberOfVotes}
+        {meal.votedLastWeek && (
+          <span className="text-yellow-500 font-bold"> - Last week</span>
+        )}
+      </p>
       <Button
         label={userHasVoted ? "UnVote" : "Vote"}
         className="w-min"
