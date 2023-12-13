@@ -10,5 +10,5 @@ public class Meal : FullAuditedEntity<Guid>
     public string Name { get; set; }
     public MealTypes Type { get; set; }
 
-    public List<MealVote> MealVotes { get; set; }
+    public List<MealVote> MealVotes { get; set; } = new();
 }

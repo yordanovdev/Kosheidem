@@ -10,7 +10,7 @@
 
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken } from 'axios';
 
-export class Client {
+export class AccountKosheidem {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -134,6 +134,20 @@ export class Client {
         }
         return Promise.resolve<RegisterOutput>(null as any);
     }
+}
+
+export class ConfigurationKosheidem {
+    private instance: AxiosInstance;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
+
+        this.instance = instance ? instance : axios.create();
+
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+
+    }
 
     /**
      * @param body (optional) 
@@ -185,6 +199,480 @@ export class Client {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
         return Promise.resolve<void>(null as any);
+    }
+}
+
+export class MealsKosheidem {
+    private instance: AxiosInstance;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
+
+        this.instance = instance ? instance : axios.create();
+
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+
+    }
+
+    /**
+     * @param weekId (optional) 
+     * @return Success
+     */
+    getMealsByType(weekId: string | undefined , cancelToken?: CancelToken | undefined): Promise<MealTypeOverview[]> {
+        let url_ = this.baseUrl + "/api/services/app/Meals/GetMealsByType?";
+        if (weekId === null)
+            throw new Error("The parameter 'weekId' cannot be null.");
+        else if (weekId !== undefined)
+            url_ += "WeekId=" + encodeURIComponent("" + weekId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "text/plain"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGetMealsByType(_response);
+        });
+    }
+
+    protected processGetMealsByType(response: AxiosResponse): Promise<MealTypeOverview[]> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = JSON.parse(resultData200);
+            return Promise.resolve<MealTypeOverview[]>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<MealTypeOverview[]>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    upVoteMeal(body: UpVoteInputDto | undefined , cancelToken?: CancelToken | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/services/app/Meals/UpVoteMeal";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json-patch+json",
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processUpVoteMeal(_response);
+        });
+    }
+
+    protected processUpVoteMeal(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    downVoteMeal(body: DownVoteInputDto | undefined , cancelToken?: CancelToken | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/services/app/Meals/DownVoteMeal";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json-patch+json",
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processDownVoteMeal(_response);
+        });
+    }
+
+    protected processDownVoteMeal(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    get(id: string | undefined , cancelToken?: CancelToken | undefined): Promise<MealDto> {
+        let url_ = this.baseUrl + "/api/services/app/Meals/Get?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "text/plain"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGet(_response);
+        });
+    }
+
+    protected processGet(response: AxiosResponse): Promise<MealDto> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = JSON.parse(resultData200);
+            return Promise.resolve<MealDto>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<MealDto>(null as any);
+    }
+
+    /**
+     * @param sorting (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAll(sorting: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined , cancelToken?: CancelToken | undefined): Promise<MealDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Meals/GetAll?";
+        if (sorting === null)
+            throw new Error("The parameter 'sorting' cannot be null.");
+        else if (sorting !== undefined)
+            url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "text/plain"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGetAll(_response);
+        });
+    }
+
+    protected processGetAll(response: AxiosResponse): Promise<MealDtoPagedResultDto> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = JSON.parse(resultData200);
+            return Promise.resolve<MealDtoPagedResultDto>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<MealDtoPagedResultDto>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    create(body: MealDto | undefined , cancelToken?: CancelToken | undefined): Promise<MealDto> {
+        let url_ = this.baseUrl + "/api/services/app/Meals/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processCreate(_response);
+        });
+    }
+
+    protected processCreate(response: AxiosResponse): Promise<MealDto> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = JSON.parse(resultData200);
+            return Promise.resolve<MealDto>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<MealDto>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    update(body: MealDto | undefined , cancelToken?: CancelToken | undefined): Promise<MealDto> {
+        let url_ = this.baseUrl + "/api/services/app/Meals/Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "PUT",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processUpdate(_response);
+        });
+    }
+
+    protected processUpdate(response: AxiosResponse): Promise<MealDto> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = JSON.parse(resultData200);
+            return Promise.resolve<MealDto>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<MealDto>(null as any);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    delete(id: string | undefined , cancelToken?: CancelToken | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/services/app/Meals/Delete?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "DELETE",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processDelete(_response);
+        });
+    }
+
+    protected processDelete(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+}
+
+export class RoleKosheidem {
+    private instance: AxiosInstance;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
+
+        this.instance = instance ? instance : axios.create();
+
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+
     }
 
     /**
@@ -635,6 +1123,20 @@ export class Client {
         }
         return Promise.resolve<RoleDtoPagedResultDto>(null as any);
     }
+}
+
+export class SessionKosheidem {
+    private instance: AxiosInstance;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
+
+        this.instance = instance ? instance : axios.create();
+
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+
+    }
 
     /**
      * @return Success
@@ -686,12 +1188,26 @@ export class Client {
         }
         return Promise.resolve<GetCurrentLoginInformationsOutput>(null as any);
     }
+}
+
+export class TenantKosheidem {
+    private instance: AxiosInstance;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
+
+        this.instance = instance ? instance : axios.create();
+
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+
+    }
 
     /**
      * @param body (optional) 
      * @return Success
      */
-    create2(body: CreateTenantDto | undefined , cancelToken?: CancelToken | undefined): Promise<TenantDto> {
+    create(body: CreateTenantDto | undefined , cancelToken?: CancelToken | undefined): Promise<TenantDto> {
         let url_ = this.baseUrl + "/api/services/app/Tenant/Create";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -715,11 +1231,11 @@ export class Client {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processCreate2(_response);
+            return this.processCreate(_response);
         });
     }
 
-    protected processCreate2(response: AxiosResponse): Promise<TenantDto> {
+    protected processCreate(response: AxiosResponse): Promise<TenantDto> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -747,7 +1263,7 @@ export class Client {
      * @param id (optional) 
      * @return Success
      */
-    delete2(id: number | undefined , cancelToken?: CancelToken | undefined): Promise<void> {
+    delete(id: number | undefined , cancelToken?: CancelToken | undefined): Promise<void> {
         let url_ = this.baseUrl + "/api/services/app/Tenant/Delete?";
         if (id === null)
             throw new Error("The parameter 'id' cannot be null.");
@@ -770,11 +1286,11 @@ export class Client {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processDelete2(_response);
+            return this.processDelete(_response);
         });
     }
 
-    protected processDelete2(response: AxiosResponse): Promise<void> {
+    protected processDelete(response: AxiosResponse): Promise<void> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -799,7 +1315,7 @@ export class Client {
      * @param id (optional) 
      * @return Success
      */
-    get2(id: number | undefined , cancelToken?: CancelToken | undefined): Promise<TenantDto> {
+    get(id: number | undefined , cancelToken?: CancelToken | undefined): Promise<TenantDto> {
         let url_ = this.baseUrl + "/api/services/app/Tenant/Get?";
         if (id === null)
             throw new Error("The parameter 'id' cannot be null.");
@@ -823,11 +1339,11 @@ export class Client {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processGet2(_response);
+            return this.processGet(_response);
         });
     }
 
-    protected processGet2(response: AxiosResponse): Promise<TenantDto> {
+    protected processGet(response: AxiosResponse): Promise<TenantDto> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -858,7 +1374,7 @@ export class Client {
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getAll2(keyword: string | undefined, isActive: boolean | undefined, skipCount: number | undefined, maxResultCount: number | undefined , cancelToken?: CancelToken | undefined): Promise<TenantDtoPagedResultDto> {
+    getAll(keyword: string | undefined, isActive: boolean | undefined, skipCount: number | undefined, maxResultCount: number | undefined , cancelToken?: CancelToken | undefined): Promise<TenantDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Tenant/GetAll?";
         if (keyword === null)
             throw new Error("The parameter 'keyword' cannot be null.");
@@ -894,11 +1410,11 @@ export class Client {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processGetAll2(_response);
+            return this.processGetAll(_response);
         });
     }
 
-    protected processGetAll2(response: AxiosResponse): Promise<TenantDtoPagedResultDto> {
+    protected processGetAll(response: AxiosResponse): Promise<TenantDtoPagedResultDto> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -926,7 +1442,7 @@ export class Client {
      * @param body (optional) 
      * @return Success
      */
-    update2(body: TenantDto | undefined , cancelToken?: CancelToken | undefined): Promise<TenantDto> {
+    update(body: TenantDto | undefined , cancelToken?: CancelToken | undefined): Promise<TenantDto> {
         let url_ = this.baseUrl + "/api/services/app/Tenant/Update";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -950,11 +1466,11 @@ export class Client {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processUpdate2(_response);
+            return this.processUpdate(_response);
         });
     }
 
-    protected processUpdate2(response: AxiosResponse): Promise<TenantDto> {
+    protected processUpdate(response: AxiosResponse): Promise<TenantDto> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -976,6 +1492,20 @@ export class Client {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
         return Promise.resolve<TenantDto>(null as any);
+    }
+}
+
+export class TokenAuthKosheidem {
+    private instance: AxiosInstance;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
+
+        this.instance = instance ? instance : axios.create();
+
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+
     }
 
     /**
@@ -1033,12 +1563,26 @@ export class Client {
         }
         return Promise.resolve<AuthenticateResultModel>(null as any);
     }
+}
+
+export class UserKosheidem {
+    private instance: AxiosInstance;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
+
+        this.instance = instance ? instance : axios.create();
+
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+
+    }
 
     /**
      * @param body (optional) 
      * @return Success
      */
-    create3(body: CreateUserDto | undefined , cancelToken?: CancelToken | undefined): Promise<UserDto> {
+    create(body: CreateUserDto | undefined , cancelToken?: CancelToken | undefined): Promise<UserDto> {
         let url_ = this.baseUrl + "/api/services/app/User/Create";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1062,11 +1606,11 @@ export class Client {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processCreate3(_response);
+            return this.processCreate(_response);
         });
     }
 
-    protected processCreate3(response: AxiosResponse): Promise<UserDto> {
+    protected processCreate(response: AxiosResponse): Promise<UserDto> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -1094,7 +1638,7 @@ export class Client {
      * @param body (optional) 
      * @return Success
      */
-    update3(body: UserDto | undefined , cancelToken?: CancelToken | undefined): Promise<UserDto> {
+    update(body: UserDto | undefined , cancelToken?: CancelToken | undefined): Promise<UserDto> {
         let url_ = this.baseUrl + "/api/services/app/User/Update";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1118,11 +1662,11 @@ export class Client {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processUpdate3(_response);
+            return this.processUpdate(_response);
         });
     }
 
-    protected processUpdate3(response: AxiosResponse): Promise<UserDto> {
+    protected processUpdate(response: AxiosResponse): Promise<UserDto> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -1150,7 +1694,7 @@ export class Client {
      * @param id (optional) 
      * @return Success
      */
-    delete3(id: number | undefined , cancelToken?: CancelToken | undefined): Promise<void> {
+    delete(id: number | undefined , cancelToken?: CancelToken | undefined): Promise<void> {
         let url_ = this.baseUrl + "/api/services/app/User/Delete?";
         if (id === null)
             throw new Error("The parameter 'id' cannot be null.");
@@ -1173,11 +1717,11 @@ export class Client {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processDelete3(_response);
+            return this.processDelete(_response);
         });
     }
 
-    protected processDelete3(response: AxiosResponse): Promise<void> {
+    protected processDelete(response: AxiosResponse): Promise<void> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -1305,7 +1849,7 @@ export class Client {
     /**
      * @return Success
      */
-    getRoles2(  cancelToken?: CancelToken | undefined): Promise<RoleDtoListResultDto> {
+    getRoles(  cancelToken?: CancelToken | undefined): Promise<RoleDtoListResultDto> {
         let url_ = this.baseUrl + "/api/services/app/User/GetRoles";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1325,11 +1869,11 @@ export class Client {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processGetRoles2(_response);
+            return this.processGetRoles(_response);
         });
     }
 
-    protected processGetRoles2(response: AxiosResponse): Promise<RoleDtoListResultDto> {
+    protected processGetRoles(response: AxiosResponse): Promise<RoleDtoListResultDto> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -1521,7 +2065,7 @@ export class Client {
      * @param id (optional) 
      * @return Success
      */
-    get3(id: number | undefined , cancelToken?: CancelToken | undefined): Promise<UserDto> {
+    get(id: number | undefined , cancelToken?: CancelToken | undefined): Promise<UserDto> {
         let url_ = this.baseUrl + "/api/services/app/User/Get?";
         if (id === null)
             throw new Error("The parameter 'id' cannot be null.");
@@ -1545,11 +2089,11 @@ export class Client {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processGet3(_response);
+            return this.processGet(_response);
         });
     }
 
-    protected processGet3(response: AxiosResponse): Promise<UserDto> {
+    protected processGet(response: AxiosResponse): Promise<UserDto> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -1580,7 +2124,7 @@ export class Client {
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getAll3(keyword: string | undefined, isActive: boolean | undefined, skipCount: number | undefined, maxResultCount: number | undefined , cancelToken?: CancelToken | undefined): Promise<UserDtoPagedResultDto> {
+    getAll(keyword: string | undefined, isActive: boolean | undefined, skipCount: number | undefined, maxResultCount: number | undefined , cancelToken?: CancelToken | undefined): Promise<UserDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/User/GetAll?";
         if (keyword === null)
             throw new Error("The parameter 'keyword' cannot be null.");
@@ -1616,11 +2160,11 @@ export class Client {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processGetAll3(_response);
+            return this.processGetAll(_response);
         });
     }
 
-    protected processGetAll3(response: AxiosResponse): Promise<UserDtoPagedResultDto> {
+    protected processGetAll(response: AxiosResponse): Promise<UserDtoPagedResultDto> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -1643,11 +2187,25 @@ export class Client {
         }
         return Promise.resolve<UserDtoPagedResultDto>(null as any);
     }
+}
+
+export class WeeksKosheidem {
+    private instance: AxiosInstance;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
+
+        this.instance = instance ? instance : axios.create();
+
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+
+    }
 
     /**
      * @return Success
      */
-    getAllAll(  cancelToken?: CancelToken | undefined): Promise<WeekDto[]> {
+    getAll(  cancelToken?: CancelToken | undefined): Promise<WeekOverviewDto[]> {
         let url_ = this.baseUrl + "/api/services/app/Weeks/GetAll";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1667,11 +2225,11 @@ export class Client {
                 throw _error;
             }
         }).then((_response: AxiosResponse) => {
-            return this.processGetAllAll(_response);
+            return this.processGetAll(_response);
         });
     }
 
-    protected processGetAllAll(response: AxiosResponse): Promise<WeekDto[]> {
+    protected processGetAll(response: AxiosResponse): Promise<WeekOverviewDto[]> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -1686,33 +2244,33 @@ export class Client {
             let result200: any = null;
             let resultData200  = _responseText;
             result200 = JSON.parse(resultData200);
-            return Promise.resolve<WeekDto[]>(result200);
+            return Promise.resolve<WeekOverviewDto[]>(result200);
 
         } else if (status !== 200 && status !== 204) {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<WeekDto[]>(null as any);
+        return Promise.resolve<WeekOverviewDto[]>(null as any);
     }
 }
 
 export interface ApplicationInfoDto {
-    version?: string | undefined;
-    releaseDate?: Date;
-    features?: { [key: string]: boolean; } | undefined;
+    version: string | undefined;
+    releaseDate: Date;
+    features: { [key: string]: boolean; } | undefined;
 }
 
 export interface AuthenticateModel {
     userNameOrEmailAddress: string;
     password: string;
-    rememberClient?: boolean;
+    rememberClient: boolean;
 }
 
 export interface AuthenticateResultModel {
-    accessToken?: string | undefined;
-    encryptedAccessToken?: string | undefined;
-    expireInSeconds?: number;
-    userId?: number;
+    accessToken: string | undefined;
+    encryptedAccessToken: string | undefined;
+    expireInSeconds: number;
+    userId: number;
 }
 
 export interface ChangePasswordDto {
@@ -1731,17 +2289,17 @@ export interface ChangeUserLanguageDto {
 export interface CreateRoleDto {
     name: string;
     displayName: string;
-    normalizedName?: string | undefined;
-    description?: string | undefined;
-    grantedPermissions?: string[] | undefined;
+    normalizedName: string | undefined;
+    description: string | undefined;
+    grantedPermissions: string[] | undefined;
 }
 
 export interface CreateTenantDto {
     tenancyName: string;
     name: string;
     adminEmailAddress: string;
-    connectionString?: string | undefined;
-    isActive?: boolean;
+    connectionString: string | undefined;
+    isActive: boolean;
 }
 
 export interface CreateUserDto {
@@ -1749,31 +2307,36 @@ export interface CreateUserDto {
     name: string;
     surname: string;
     emailAddress: string;
-    isActive?: boolean;
-    roleNames?: string[] | undefined;
+    isActive: boolean;
+    roleNames: string[] | undefined;
     password: string;
 }
 
+export interface DownVoteInputDto {
+    mealId: string;
+    weekId: string;
+}
+
 export interface FlatPermissionDto {
-    name?: string | undefined;
-    displayName?: string | undefined;
-    description?: string | undefined;
+    name: string | undefined;
+    displayName: string | undefined;
+    description: string | undefined;
 }
 
 export interface GetCurrentLoginInformationsOutput {
-    application?: ApplicationInfoDto;
-    user?: UserLoginInfoDto;
-    tenant?: TenantLoginInfoDto;
+    application: ApplicationInfoDto;
+    user: UserLoginInfoDto;
+    tenant: TenantLoginInfoDto;
 }
 
 export interface GetRoleForEditOutput {
-    role?: RoleEditDto;
-    permissions?: FlatPermissionDto[] | undefined;
-    grantedPermissionNames?: string[] | undefined;
+    role: RoleEditDto;
+    permissions: FlatPermissionDto[] | undefined;
+    grantedPermissionNames: string[] | undefined;
 }
 
 export interface Int64EntityDto {
-    id?: number;
+    id: number;
 }
 
 export interface IsTenantAvailableInput {
@@ -1781,19 +2344,37 @@ export interface IsTenantAvailableInput {
 }
 
 export interface IsTenantAvailableOutput {
-    state?: TenantAvailabilityState;
-    tenantId?: number | undefined;
+    state: TenantAvailabilityState;
+    tenantId: number | undefined;
+}
+
+export interface MealDto {
+    id: string;
+    name: string | undefined;
+    type: string | undefined;
+    numberOfVotes: number;
+    votedLastWeek: boolean;
+}
+
+export interface MealDtoPagedResultDto {
+    items: MealDto[] | undefined;
+    totalCount: number;
+}
+
+export interface MealTypeOverview {
+    type: string | undefined;
+    meals: MealDto[] | undefined;
 }
 
 export interface PermissionDto {
-    id?: number;
-    name?: string | undefined;
-    displayName?: string | undefined;
-    description?: string | undefined;
+    id: number;
+    name: string | undefined;
+    displayName: string | undefined;
+    description: string | undefined;
 }
 
 export interface PermissionDtoListResultDto {
-    items?: PermissionDto[] | undefined;
+    items: PermissionDto[] | undefined;
 }
 
 export interface RegisterInput {
@@ -1802,11 +2383,11 @@ export interface RegisterInput {
     userName: string;
     emailAddress: string;
     password: string;
-    captchaResponse?: string | undefined;
+    captchaResponse: string | undefined;
 }
 
 export interface RegisterOutput {
-    canLogin?: boolean;
+    canLogin: boolean;
 }
 
 export interface ResetPasswordDto {
@@ -1816,42 +2397,42 @@ export interface ResetPasswordDto {
 }
 
 export interface RoleDto {
-    id?: number;
+    id: number;
     name: string;
     displayName: string;
-    normalizedName?: string | undefined;
-    description?: string | undefined;
-    grantedPermissions?: string[] | undefined;
+    normalizedName: string | undefined;
+    description: string | undefined;
+    grantedPermissions: string[] | undefined;
 }
 
 export interface RoleDtoListResultDto {
-    items?: RoleDto[] | undefined;
+    items: RoleDto[] | undefined;
 }
 
 export interface RoleDtoPagedResultDto {
-    items?: RoleDto[] | undefined;
-    totalCount?: number;
+    items: RoleDto[] | undefined;
+    totalCount: number;
 }
 
 export interface RoleEditDto {
-    id?: number;
+    id: number;
     name: string;
     displayName: string;
-    description?: string | undefined;
-    isStatic?: boolean;
+    description: string | undefined;
+    isStatic: boolean;
 }
 
 export interface RoleListDto {
-    id?: number;
-    name?: string | undefined;
-    displayName?: string | undefined;
-    isStatic?: boolean;
-    isDefault?: boolean;
-    creationTime?: Date;
+    id: number;
+    name: string | undefined;
+    displayName: string | undefined;
+    isStatic: boolean;
+    isDefault: boolean;
+    creationTime: Date;
 }
 
 export interface RoleListDtoListResultDto {
-    items?: RoleListDto[] | undefined;
+    items: RoleListDto[] | undefined;
 }
 
 export enum TenantAvailabilityState {
@@ -1861,53 +2442,61 @@ export enum TenantAvailabilityState {
 }
 
 export interface TenantDto {
-    id?: number;
+    id: number;
     tenancyName: string;
     name: string;
-    isActive?: boolean;
+    isActive: boolean;
 }
 
 export interface TenantDtoPagedResultDto {
-    items?: TenantDto[] | undefined;
-    totalCount?: number;
+    items: TenantDto[] | undefined;
+    totalCount: number;
 }
 
 export interface TenantLoginInfoDto {
-    id?: number;
-    tenancyName?: string | undefined;
-    name?: string | undefined;
+    id: number;
+    tenancyName: string | undefined;
+    name: string | undefined;
+}
+
+export interface UpVoteInputDto {
+    mealId: string;
+    weekId: string;
 }
 
 export interface UserDto {
-    id?: number;
+    id: number;
     userName: string;
     name: string;
     surname: string;
     emailAddress: string;
-    isActive?: boolean;
-    fullName?: string | undefined;
-    lastLoginTime?: Date | undefined;
-    creationTime?: Date;
-    roleNames?: string[] | undefined;
+    isActive: boolean;
+    fullName: string | undefined;
+    lastLoginTime: Date | undefined;
+    creationTime: Date;
+    roleNames: string[] | undefined;
 }
 
 export interface UserDtoPagedResultDto {
-    items?: UserDto[] | undefined;
-    totalCount?: number;
+    items: UserDto[] | undefined;
+    totalCount: number;
 }
 
 export interface UserLoginInfoDto {
-    id?: number;
-    name?: string | undefined;
-    surname?: string | undefined;
-    userName?: string | undefined;
-    emailAddress?: string | undefined;
+    id: number;
+    name: string | undefined;
+    surname: string | undefined;
+    userName: string | undefined;
+    emailAddress: string | undefined;
 }
 
-export interface WeekDto {
-    id?: string;
-    startDate?: Date;
-    endDate?: Date;
+export interface WeekOverviewDto {
+    id: string;
+    startDate: Date;
+    endDate: Date;
+    future: boolean;
+    past: boolean;
+    current: boolean;
 }
 
 export class ApiException extends Error {
