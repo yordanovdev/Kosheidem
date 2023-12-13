@@ -9,11 +9,15 @@ using Abp.Authorization;
 using Abp.Authorization.Users;
 using Abp.MultiTenancy;
 using Abp.Runtime.Security;
+using Abp.UI;
+using Kosheidem.Authentication.External;
 using Kosheidem.Authentication.JwtBearer;
 using Kosheidem.Authorization;
 using Kosheidem.Authorization.Users;
+using Kosheidem.Models.External;
 using Kosheidem.Models.TokenAuth;
 using Kosheidem.MultiTenancy;
+using Microsoft.AspNetCore.Identity;
 
 namespace Kosheidem.Controllers
 {
@@ -24,17 +28,24 @@ namespace Kosheidem.Controllers
         private readonly ITenantCache _tenantCache;
         private readonly AbpLoginResultTypeHelper _abpLoginResultTypeHelper;
         private readonly TokenAuthConfiguration _configuration;
+        private readonly ExternalAuthManager _externalAuthManager;
+        private readonly UserRegistrationManager _userRegistrationManager;
+
 
         public TokenAuthController(
             LogInManager logInManager,
             ITenantCache tenantCache,
             AbpLoginResultTypeHelper abpLoginResultTypeHelper,
-            TokenAuthConfiguration configuration)
+            TokenAuthConfiguration configuration,
+            ExternalAuthManager externalAuthManager,
+            UserRegistrationManager userRegistrationManager)
         {
             _logInManager = logInManager;
             _tenantCache = tenantCache;
             _abpLoginResultTypeHelper = abpLoginResultTypeHelper;
             _configuration = configuration;
+            _externalAuthManager = externalAuthManager;
+            _userRegistrationManager = userRegistrationManager;
         }
 
         [HttpPost]
@@ -57,6 +68,95 @@ namespace Kosheidem.Controllers
             };
         }
 
+        [HttpPost]
+        public async Task<ExternalAuthenticateResultModel> ExternalAuthenticate(
+            [FromBody] ExternalAuthenticateModel model)
+        {
+            var externalUser = await GetExternalUserData(model);
+
+            var loginResult = await _logInManager.LoginAsync(
+                new UserLoginInfo(externalUser.Provider, externalUser.EmailAddress, externalUser.FullName),
+                GetTenancyNameOrNull());
+
+            switch (loginResult.Result)
+            {
+                case AbpLoginResultType.Success:
+                {
+                    var accessToken = CreateAccessToken(CreateJwtClaims(loginResult.Identity));
+                    return new ExternalAuthenticateResultModel
+                    {
+                        AccessToken = accessToken,
+                        EncryptedAccessToken = GetEncryptedAccessToken(accessToken),
+                        ExpireInSeconds = (int)_configuration.Expiration.TotalSeconds
+                    };
+                }
+                case AbpLoginResultType.UnknownExternalLogin:
+                {
+                    var newUser = await RegisterExternalUserAsync(externalUser);
+
+                    loginResult = await _logInManager.LoginAsync(
+                        new UserLoginInfo(externalUser.Provider, newUser.EmailAddress, externalUser.FullName),
+                        GetTenancyNameOrNull());
+
+
+                    if (loginResult.Result != AbpLoginResultType.Success)
+                    {
+                        throw new UserFriendlyException("Failed login");
+                    }
+
+                    var accessToken = CreateAccessToken(CreateJwtClaims(loginResult.Identity));
+
+                    return new ExternalAuthenticateResultModel
+                    {
+                        AccessToken = accessToken,
+                        EncryptedAccessToken = GetEncryptedAccessToken(accessToken),
+                        ExpireInSeconds = (int)_configuration.Expiration.TotalSeconds
+                    };
+                }
+                default:
+                    throw new UserFriendlyException("Failed login");
+            }
+        }
+
+        private async Task<User> RegisterExternalUserAsync(ExternalAuthUserInfo externalUser)
+        {
+            var user = await _userRegistrationManager.RegisterAsync(
+                externalUser.Name,
+                externalUser.Surname,
+                externalUser.EmailAddress,
+                externalUser.EmailAddress,
+                Authorization.Users.User.CreateRandomPassword(),
+                true
+            );
+
+            user.Logins = new List<UserLogin>
+            {
+                new UserLogin
+                {
+                    LoginProvider = externalUser.Provider,
+                    ProviderKey = externalUser.EmailAddress,
+                    TenantId = user.TenantId
+                }
+            };
+
+            await CurrentUnitOfWork.SaveChangesAsync();
+
+            return user;
+        }
+
+
+        private async Task<ExternalAuthUserInfo> GetExternalUserData(ExternalAuthenticateModel model)
+        {
+            var userInfo = await _externalAuthManager.GetUserInfo(model.AuthProvider, model.ProviderAccessCode);
+
+            if (userInfo.ProviderKey != model.ProviderKey)
+            {
+                throw new UserFriendlyException("Unable to validate user token");
+            }
+
+            return userInfo;
+        }
+
         private string GetTenancyNameOrNull()
         {
             if (!AbpSession.TenantId.HasValue)
@@ -67,7 +167,8 @@ namespace Kosheidem.Controllers
             return _tenantCache.GetOrNull(AbpSession.TenantId.Value)?.TenancyName;
         }
 
-        private async Task<AbpLoginResult<Tenant, User>> GetLoginResultAsync(string usernameOrEmailAddress, string password, string tenancyName)
+        private async Task<AbpLoginResult<Tenant, User>> GetLoginResultAsync(string usernameOrEmailAddress,
+            string password, string tenancyName)
         {
             var loginResult = await _logInManager.LoginAsync(usernameOrEmailAddress, password, tenancyName);
 
@@ -76,7 +177,8 @@ namespace Kosheidem.Controllers
                 case AbpLoginResultType.Success:
                     return loginResult;
                 default:
-                    throw _abpLoginResultTypeHelper.CreateExceptionForFailedLoginAttempt(loginResult.Result, usernameOrEmailAddress, tenancyName);
+                    throw _abpLoginResultTypeHelper.CreateExceptionForFailedLoginAttempt(loginResult.Result,
+                        usernameOrEmailAddress, tenancyName);
             }
         }
 
@@ -106,7 +208,8 @@ namespace Kosheidem.Controllers
             {
                 new Claim(JwtRegisteredClaimNames.Sub, nameIdClaim.Value),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.Now.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64)
+                new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.Now.ToUnixTimeSeconds().ToString(),
+                    ClaimValueTypes.Integer64)
             });
 
             return claims;

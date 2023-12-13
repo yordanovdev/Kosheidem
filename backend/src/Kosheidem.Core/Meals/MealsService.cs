@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Domain.Services;
@@ -13,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kosheidem.Meals;
 
+[AbpAuthorize]
 public class MealsService : DomainService, IMealsService
 {
     private readonly IRepository<Meal, Guid> _mealsRepository;

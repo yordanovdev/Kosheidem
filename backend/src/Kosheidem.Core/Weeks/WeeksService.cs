@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Domain.Services;
 using Abp.UI;
@@ -9,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kosheidem.Weeks;
 
+[AbpAuthorize]
 public class WeeksService : DomainService, IWeeksService
 {
     private readonly IRepository<Week, Guid> _weeksRepository;

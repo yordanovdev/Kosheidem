@@ -17,7 +17,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <PrimeReactProvider value={{ unstyled: true, pt: DesignSystem }}>
-        <App />
+          <App />
       </PrimeReactProvider>
     </QueryClientProvider>
   </React.StrictMode>

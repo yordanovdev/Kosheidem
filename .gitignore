@@ -1,2 +1,3 @@
 .DS_Store
 *.txt
+backend/src/Kosheidem.Web.Core/Authentication/External/webConfiguration.json

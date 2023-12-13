@@ -1563,6 +1563,62 @@ export class TokenAuthKosheidem {
         }
         return Promise.resolve<AuthenticateResultModel>(null as any);
     }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    externalAuthenticate(body: ExternalAuthenticateModel | undefined , cancelToken?: CancelToken | undefined): Promise<ExternalAuthenticateResultModel> {
+        let url_ = this.baseUrl + "/api/TokenAuth/ExternalAuthenticate";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processExternalAuthenticate(_response);
+        });
+    }
+
+    protected processExternalAuthenticate(response: AxiosResponse): Promise<ExternalAuthenticateResultModel> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = JSON.parse(resultData200);
+            return Promise.resolve<ExternalAuthenticateResultModel>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ExternalAuthenticateResultModel>(null as any);
+    }
 }
 
 export class UserKosheidem {
@@ -2315,6 +2371,18 @@ export interface CreateUserDto {
 export interface DownVoteInputDto {
     mealId: string;
     weekId: string;
+}
+
+export interface ExternalAuthenticateModel {
+    authProvider: string;
+    providerKey: string;
+    providerAccessCode: string;
+}
+
+export interface ExternalAuthenticateResultModel {
+    accessToken: string | undefined;
+    encryptedAccessToken: string | undefined;
+    expireInSeconds: number;
 }
 
 export interface FlatPermissionDto {

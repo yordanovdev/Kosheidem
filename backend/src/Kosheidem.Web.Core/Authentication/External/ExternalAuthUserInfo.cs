@@ -11,5 +11,8 @@
         public string Surname { get; set; }
 
         public string Provider { get; set; }
+
+        public string FullName { get; set; }
+        public string Picture { get; set; }
     }
 }
