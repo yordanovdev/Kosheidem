@@ -16,7 +16,7 @@
     <OpenApiGenerateDocuments>false</OpenApiGenerateDocuments>
     <RootNamespace>Kosheidem</RootNamespace>
     <LangVersion>7.2</LangVersion>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GenerateDocumentationFile>False</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Kosheidem.Application\Kosheidem.Application.csproj" />
