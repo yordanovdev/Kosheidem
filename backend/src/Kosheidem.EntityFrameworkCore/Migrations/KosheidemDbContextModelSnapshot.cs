@@ -1547,6 +1547,10 @@ namespace Kosheidem.Migrations
                         .HasMaxLength(32)
                         .HasColumnType("nvarchar(32)");
 
+                    b.Property<string>("Picture")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
                     b.Property<string>("SecurityStamp")
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
@@ -1721,6 +1725,21 @@ namespace Kosheidem.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Weeks");
+                });
+
+            modelBuilder.Entity("MealVoteUser", b =>
+                {
+                    b.Property<Guid>("MealVotesId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<long>("UsersId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("MealVotesId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("MealVoteUser");
                 });
 
             modelBuilder.Entity("Abp.Application.Features.EditionFeatureSetting", b =>
@@ -1985,6 +2004,21 @@ namespace Kosheidem.Migrations
                     b.Navigation("Edition");
 
                     b.Navigation("LastModifierUser");
+                });
+
+            modelBuilder.Entity("MealVoteUser", b =>
+                {
+                    b.HasOne("Kosheidem.MealVotes.MealVote", null)
+                        .WithMany()
+                        .HasForeignKey("MealVotesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Kosheidem.Authorization.Users.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Abp.Application.Features.EditionFeatureSetting", b =>

@@ -2422,6 +2422,7 @@ export interface MealDto {
     type: string | undefined;
     numberOfVotes: number;
     votedLastWeek: boolean;
+    users: MealUserDto[] | undefined;
 }
 
 export interface MealDtoPagedResultDto {
@@ -2432,6 +2433,12 @@ export interface MealDtoPagedResultDto {
 export interface MealTypeOverview {
     type: string | undefined;
     meals: MealDto[] | undefined;
+}
+
+export interface MealUserDto {
+    id: number;
+    picture: string | undefined;
+    userName: string | undefined;
 }
 
 export interface PermissionDto {
@@ -2542,6 +2549,7 @@ export interface UserDto {
     fullName: string | undefined;
     lastLoginTime: Date | undefined;
     creationTime: Date;
+    picture: string | undefined;
     roleNames: string[] | undefined;
 }
 
@@ -2556,6 +2564,7 @@ export interface UserLoginInfoDto {
     surname: string | undefined;
     userName: string | undefined;
     emailAddress: string | undefined;
+    picture: string | undefined;
 }
 
 export interface WeekOverviewDto {

@@ -35,6 +35,8 @@ namespace Kosheidem.Users.Dto
 
         public DateTime CreationTime { get; set; }
 
+        public string Picture { get; set; }
+
         public string[] RoleNames { get; set; }
     }
 }

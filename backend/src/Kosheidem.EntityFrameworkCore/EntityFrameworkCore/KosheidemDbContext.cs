@@ -37,6 +37,11 @@ namespace Kosheidem.EntityFrameworkCore
                 .WithOne(i => i.Week)
                 .HasForeignKey(i => i.WeekId);
 
+            modelBuilder.Entity<MealVote>()
+                .HasMany(i => i.Users)
+                .WithMany(i => i.MealVotes);
+
+            modelBuilder.Entity<User>().Property(i => i.Picture).HasMaxLength(1000);
 
             base.OnModelCreating(modelBuilder);
         }

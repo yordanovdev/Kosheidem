@@ -129,6 +129,7 @@ namespace Kosheidem.Controllers
                 true
             );
 
+            user.Picture = externalUser.Picture;
             user.Logins = new List<UserLogin>
             {
                 new UserLogin
